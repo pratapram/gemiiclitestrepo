@@ -1,5 +1,5 @@
 """
-Unit tests for the ToolAgent class using google-genai.
+Unit tests for the ToolAgent class using google-genai and Vertex AI.
 """
 
 import unittest
@@ -26,14 +26,15 @@ class TestToolAgent(unittest.TestCase):
         agent = ToolAgent(
             api_key="fake_key",
             name="test_agent",
-            system_instructions="system instructions"
+            system_instructions="system instructions",
+            vertexai=True
         )
         
         result = agent.process("test prompt")
         
         self.assertEqual(result, "mocked agent response")
         mock_client.models.generate_content.assert_called_once_with(
-            model="gemini-1.5-flash",
+            model="gemini-3-flash-preview",
             contents="test prompt",
             config={'system_instruction': 'system instructions'}
         )

@@ -10,16 +10,22 @@ class ToolRegistry:
     Registry for managing and invoking dynamic tool agents.
     """
 
-    def __init__(self, api_key: str):
+    def __init__(self, api_key: str, vertexai: bool = True):
         """
-        Initialize the ToolRegistry with a Google GenAI API key.
+        Initialize the ToolRegistry with a Google GenAI client.
 
         Parameters
         ----------
         api_key : str
-            The API key for Google Generative AI.
+            The API key or Access Token for Google Generative AI.
+        vertexai : bool, optional
+            Whether to use Vertex AI, by default True.
         """
-        self.client = genai.Client(api_key=api_key)
+        # Based on example.py, vertexai=True with api_key works.
+        self.client = genai.Client(
+            api_key=api_key,
+            vertexai=vertexai
+        )
         self.tools: Dict[str, Any] = {}
 
     def register_tool(
@@ -27,7 +33,7 @@ class ToolRegistry:
         name: str, 
         system_instructions: str, 
         prompt_template: str,
-        model_name: str = "gemini-1.5-flash"
+        model_name: str = "gemini-3-flash-preview"
     ):
         """
         Register a new tool agent.
@@ -41,7 +47,7 @@ class ToolRegistry:
         prompt_template : str
             The prompt template to be used when the tool is invoked.
         model_name : str, optional
-            The name of the Gemini model to use, by default "gemini-1.5-flash".
+            The name of the Gemini model to use, by default "gemini-3-flash-preview".
         """
         self.tools[name] = {
             "system_instructions": system_instructions,

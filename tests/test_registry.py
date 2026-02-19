@@ -1,5 +1,5 @@
 """
-Unit tests for the ToolRegistry class using google-genai.
+Unit tests for the ToolRegistry class using google-genai and Vertex AI.
 """
 
 import unittest
@@ -15,7 +15,7 @@ class TestToolRegistry(unittest.TestCase):
     def setUp(self, mock_client_class):
         self.mock_client = MagicMock()
         mock_client_class.return_value = self.mock_client
-        self.registry = ToolRegistry(api_key="fake_key")
+        self.registry = ToolRegistry(api_key="fake_key", vertexai=True)
 
     def test_register_tool(self):
         """
@@ -41,14 +41,15 @@ class TestToolRegistry(unittest.TestCase):
         self.registry.register_tool(
             name="test_tool",
             system_instructions="instructions",
-            prompt_template="template {input}"
+            prompt_template="template {input}",
+            model_name="gemini-3-flash-preview"
         )
         
         result = self.registry.invoke_tool("test_tool", "test input")
         
         self.assertEqual(result, "mocked response")
         self.mock_client.models.generate_content.assert_called_once_with(
-            model="gemini-1.5-flash",
+            model="gemini-3-flash-preview",
             contents="template test input",
             config={'system_instruction': 'instructions'}
         )

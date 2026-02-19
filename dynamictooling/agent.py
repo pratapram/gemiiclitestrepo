@@ -10,25 +10,37 @@ class ToolAgent:
     Represents an individual tool agent that can process specific tasks.
     """
 
-    def __init__(self, api_key: str, name: str, system_instructions: str, model_name: str = "gemini-1.5-flash"):
+    def __init__(
+        self, 
+        api_key: str, 
+        name: str = "agent", 
+        system_instructions: str = "", 
+        model_name: str = "gemini-3-flash-preview",
+        vertexai: bool = True
+    ):
         """
         Initialize the ToolAgent.
 
         Parameters
         ----------
         api_key : str
-            The API key for Google Generative AI.
+            The API key or Access Token for Google Generative AI.
         name : str
             Unique name for the agent.
         system_instructions : str
             System instructions for the agent.
         model_name : str, optional
-            The name of the Gemini model to use, by default "gemini-1.5-flash".
+            The name of the Gemini model to use, by default "gemini-3-flash-preview".
+        vertexai : bool, optional
+            Whether to use Vertex AI, by default True.
         """
         self.name = name
         self.system_instructions = system_instructions
         self.model_name = model_name
-        self.client = genai.Client(api_key=api_key)
+        self.client = genai.Client(
+            api_key=api_key,
+            vertexai=vertexai
+        )
 
     def process(self, prompt: str, attachments: Optional[List[Any]] = None) -> str:
         """
